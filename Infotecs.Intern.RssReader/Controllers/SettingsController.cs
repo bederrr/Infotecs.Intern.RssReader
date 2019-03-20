@@ -27,16 +27,16 @@ namespace Infotecs.Intern.RssReader.Controllers
         [HttpPost]
         public ActionResult Index(RssReaderOptions answeredOptions)
         {
-            // do validation
-            if (options != answeredOptions)
-            {
-                if (/*answeredOptions.IsValid()*/ true)
-                {
-                    // save
+            //// do validation
+            //if (options != answeredOptions)
+            //{
+            //    if (/*answeredOptions.IsValid()*/ true)
+            //    {
+            //        // save
 
-                }
-            }
-            // redirect
+            //    }
+            //}
+            //// redirect
             return Redirect("/");
         }
     }
