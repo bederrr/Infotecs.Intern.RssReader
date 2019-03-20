@@ -7,32 +7,31 @@ using Microsoft.Extensions.Options;
 
 namespace Infotecs.Intern.RssReader.Controllers
 {
-    /// <summary>
-    /// Контроллер основной страницы.
-    /// </summary>
+    /// <inheritdoc/>
     public class FeedsController : Controller
     {
-        private readonly IRssReader readerLogic;
         private readonly RssReaderOptions options;
+        private readonly IRssService serviceLogic;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="readerLogic">Логика.</param>
+        /// <param name="serviceLogic">Логика.</param>
         /// <param name="options">Конфигурация.</param>
-        public FeedsController(IRssReader readerLogic, IOptions<RssReaderOptions> options)
+        public FeedsController(IRssService serviceLogic, IOptions<RssReaderOptions> options)
         {
-            this.readerLogic = readerLogic;
+            this.serviceLogic = serviceLogic;
             this.options = options.Value;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.listItems = await readerLogic.ReadRssAsync();
-            ViewBag.options = options;
+            ViewBag.listItems = await serviceLogic.GetRssFeedsAsync();
+            ViewBag.updateInterval = options.UpdateInterval;
+            ViewBag.enableFormatting = options.EnableFormatting;
+
 
             return View();
         }
-
     }
 }

@@ -31,7 +31,7 @@ namespace Infotecs.Intern.RssReader
         /// <param name="services">Контейнер коллекции сервисов.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IRssReader, GeneralRssReader>();
+            services.AddTransient<IRssService, RssService>();
             services.AddTransient<IHttpProxyClientService, HttpProxyClientService>();
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -49,7 +49,7 @@ namespace Infotecs.Intern.RssReader
         /// Метод вызывается во время выполнения. Используйте этот метод для настройки конвейера HTTP-запроса.
         /// </summary>
         /// <param name="app">Поставщик конфигурации.</param>
-        /// <param name="env">Поставщик информации вэб-хостинга.</param>
+        /// <param name="env">Поставщик информации веб-хостинга.</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

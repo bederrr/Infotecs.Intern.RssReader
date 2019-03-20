@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Infotecs.Intern.RssReader.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

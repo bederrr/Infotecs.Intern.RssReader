@@ -22,19 +22,14 @@ namespace Infotecs.Intern.RssReader.Services
 
         public HttpClient CreateHttpClient()
         {
-            try
-            {
                 if (!config.Value.UseProxy)
                 {
                     return new HttpClient();
                 }
 
-                var proxyHost = config.Value.ProxyHost;
-                var proxyPort = config.Value.ProxyPort.ToString();
-
                 var proxy = new WebProxy()
                 {
-                    Address = new Uri($"http://{proxyHost}:{proxyPort}"),
+                    Address = new Uri($"http://{config.Value.ProxyHost}:{config.Value.ProxyPort.ToString()}"),
                     UseDefaultCredentials = true
                 };
 
@@ -43,41 +38,22 @@ namespace Infotecs.Intern.RssReader.Services
                     Proxy = proxy,
                 };
 
-                var client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
+                var client = new HttpClient(httpClientHandler,true);
                 return client;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-
-            return null;
         }
 
         public HttpWebRequest CreateHttpWebRequest(string requestUri)
         {
-            try
-            {
-                HttpWebRequest res = (HttpWebRequest)WebRequest.Create(requestUri);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
 
                 if (!config.Value.UseProxy)
                 {
-                    return res;
+                    return request;
                 }
 
-                var proxyHost = config.Value.ProxyHost;
-                var proxyPort = config.Value.ProxyPort;
-                var proxy = new WebProxy(proxyHost, proxyPort);
-                res.Proxy = proxy;
+                request.Proxy = new WebProxy(config.Value.ProxyHost, config.Value.ProxyPort);
 
-                return res;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-
-            return null;
+                return request;
         }
     }
 }

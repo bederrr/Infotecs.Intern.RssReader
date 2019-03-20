@@ -6,12 +6,12 @@ namespace Infotecs.Intern.RssReader.Services
     /// <summary>
     /// Логика.
     /// </summary>
-    public interface IRssReader
+    public interface IRssService
     {
         /// <summary>
-        /// Асинхронно читает Rss.
+        /// Асинхронно получает Rss.
         /// </summary>
         /// <returns>Task-коллекция Rss новостей.</returns>
-        Task<List<Models.RssFeed>> ReadRssAsync();
+        Task<List<Models.RssFeed>> GetRssFeedsAsync();
     }
 }

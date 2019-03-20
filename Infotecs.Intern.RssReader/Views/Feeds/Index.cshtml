@@ -3,7 +3,7 @@
 }
 
 @*a little clumsy, leave it for later*@
-<meta http-equiv="refresh" content="@ViewBag.options.UpdateInterval">
+<meta http-equiv="refresh" content="@ViewBag.updateInterval">
 
 @model Infotecs.Intern.RssReader.Models.RssFeed
 
@@ -16,7 +16,7 @@
             </summary>
 
             <p>
-                @if (ViewBag.options.EnableFormatting)
+                @if (ViewBag.enableFormatting)
                 {
                     @Html.Raw(@item.Description)
                 }

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using Infotecs.Intern.RssReader.Models;
-using Infotecs.Intern.RssReader.Services;
 using Microsoft.Extensions.Options;
 
 namespace Infotecs.Intern.RssReader.Services
 {
     /// <inheritdoc />
-    public class GeneralRssReader : IRssReader
+    public class RssService : IRssService
     {
         private readonly RssReaderOptions options;
         private readonly List<RssFeed> listItems = new List<RssFeed>();
@@ -20,18 +20,21 @@ namespace Infotecs.Intern.RssReader.Services
         /// </summary>
         /// <param name="options">Параметры из appsettings.</param>
         /// <param name="httpProxyClientService">Параметры proxy.</param>
-        public GeneralRssReader(IOptions<RssReaderOptions> options, IHttpProxyClientService httpProxyClientService)
+        public RssService(IOptions<RssReaderOptions> options, IHttpProxyClientService httpProxyClientService)
         {
             this.options = options.Value;
             this.httpProxyClientService = httpProxyClientService;
         }
 
-        public async Task<List<RssFeed>> ReadRssAsync()
+        public async Task<List<RssFeed>> GetRssFeedsAsync()
         {
-            foreach (var url in options.Feeds)
-            {
-                await AddRssToListAsync(url);
-            }
+            IEnumerable<Task> downloadTasksQuery = 
+                from url in options.Feeds select AddRssToListAsync(url);
+
+            Task[] downloadTasks = downloadTasksQuery.ToArray();
+
+            await Task.WhenAll(downloadTasks);
+
             return listItems;
         }
 
@@ -47,18 +50,22 @@ namespace Infotecs.Intern.RssReader.Services
 
                 while (nodes.MoveNext())
                 {
-                    XPathNavigator node = nodes.Current;
-                    listItems.Add(new RssFeed
-                    {
-                        Title = node.SelectSingleNode("title").Value,
-                        Description = node.SelectSingleNode("description").Value,
-                        Link = node.SelectSingleNode("link").Value,
-                        Guid = node.SelectSingleNode("guid").Value,
-                        Category = node.SelectSingleNode("category").Value,
-                        PubDate = DateTime.Parse(node.SelectSingleNode("pubDate").Value)
-                    });
+                    AddNext(nodes);
                 }
             }
+        }
+
+        private void AddNext(XPathNodeIterator nodes)
+        {
+            listItems.Add(new RssFeed
+            {
+                Title = nodes.Current.SelectSingleNode("title").Value,
+                Description = nodes.Current.SelectSingleNode("description").Value,
+                Link = nodes.Current.SelectSingleNode("link").Value,
+                Guid = nodes.Current.SelectSingleNode("guid").Value,
+                Category = nodes.Current.SelectSingleNode("category").Value,
+                PubDate = DateTime.Parse(nodes.Current.SelectSingleNode("pubDate").Value)
+            });
         }
     }
 }
