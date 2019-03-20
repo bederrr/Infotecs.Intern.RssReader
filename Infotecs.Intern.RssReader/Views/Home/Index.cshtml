@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*a little clumsy, leave it for later*@
+<meta http-equiv="refresh" content="@ViewBag.options.UdpateInterval">
+
+@model Infotecs.Intern.RssReader.Models.RssFeed
+
+@foreach (var item in ViewBag.listItems)
+{
+    <div>
+        <details class="sum_border">
+            <summary>
+                <a href="@item.Link">@item.Title</a>
+            </summary>
+
+            <p>
+                @if (ViewBag.options.EnableFormatting)
+                {
+                    @Html.Raw(@item.Description)
+                }
+                else
+                {
+                    @item.Description
+                }
+            </p>
+            <p>
+                @item.Category -
+                @if (item.PubDate.Date == DateTime.Today)
+                {
+                    @item.PubDate.ToString("hh:mm")
+                }
+                else
+                {
+                    @item.PubDate.ToString("dd.MM.yyyy hh:mm")
+                }
+            </p>
+        </details>
+    </div>
+    <br>
+}
+
