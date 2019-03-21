@@ -41,19 +41,5 @@ namespace Infotecs.Intern.RssReader.Services
                 var client = new HttpClient(httpClientHandler,true);
                 return client;
         }
-
-        public HttpWebRequest CreateHttpWebRequest(string requestUri)
-        {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
-
-                if (!config.Value.UseProxy)
-                {
-                    return request;
-                }
-
-                request.Proxy = new WebProxy(config.Value.ProxyHost, config.Value.ProxyPort);
-
-                return request;
-        }
     }
 }

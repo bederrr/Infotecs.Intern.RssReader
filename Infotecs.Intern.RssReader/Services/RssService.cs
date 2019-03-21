@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,33 +13,29 @@ namespace Infotecs.Intern.RssReader.Services
     public class RssService : IRssService
     {
         private readonly RssReaderOptions options;
-        private readonly List<RssFeed> listItems = new List<RssFeed>();
         private readonly IHttpProxyClientService httpProxyClientService;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="options">Параметры из appsettings.</param>
         /// <param name="httpProxyClientService">Параметры proxy.</param>
-        public RssService(IOptions<RssReaderOptions> options, IHttpProxyClientService httpProxyClientService)
+        /// <param name="settingsService">Поставщик параметров.</param>
+        public RssService(IHttpProxyClientService httpProxyClientService, ISettingsService settingsService)
         {
-            this.options = options.Value;
+            options = settingsService.GetSettings();
             this.httpProxyClientService = httpProxyClientService;
         }
 
-        public async Task<List<RssFeed>> GetRssFeedsAsync()
+        public async Task<ConcurrentBag<RssFeed>> GetRssFeedsAsync()
         {
-            IEnumerable<Task> downloadTasksQuery = 
-                from url in options.Feeds select AddRssToListAsync(url);
+            var result = new ConcurrentBag<RssFeed>();
+            List<Task> downloads = options.Feeds.ConvertAll(x => GetDownloadTaskAsync(x, result));
+            await Task.WhenAll(downloads);
 
-            Task[] downloadTasks = downloadTasksQuery.ToArray();
-
-            await Task.WhenAll(downloadTasks);
-
-            return listItems;
+            return result;
         }
 
-        private async Task AddRssToListAsync(string url)
+        private async Task GetDownloadTaskAsync(string url, ConcurrentBag<RssFeed> listBag)
         {
             var httpClient = httpProxyClientService.CreateHttpClient();
 
@@ -50,14 +47,14 @@ namespace Infotecs.Intern.RssReader.Services
 
                 while (nodes.MoveNext())
                 {
-                    AddNext(nodes);
+                    listBag.Add(GetRssFeed(nodes));
                 }
             }
         }
 
-        private void AddNext(XPathNodeIterator nodes)
+        private RssFeed GetRssFeed(XPathNodeIterator nodes)
         {
-            listItems.Add(new RssFeed
+            return new RssFeed
             {
                 Title = nodes.Current.SelectSingleNode("title").Value,
                 Description = nodes.Current.SelectSingleNode("description").Value,
@@ -65,7 +62,7 @@ namespace Infotecs.Intern.RssReader.Services
                 Guid = nodes.Current.SelectSingleNode("guid").Value,
                 Category = nodes.Current.SelectSingleNode("category").Value,
                 PubDate = DateTime.Parse(nodes.Current.SelectSingleNode("pubDate").Value)
-            });
+            };
         }
     }
 }

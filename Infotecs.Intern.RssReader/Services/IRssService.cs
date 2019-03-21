@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infotecs.Intern.RssReader.Services
@@ -12,6 +13,6 @@ namespace Infotecs.Intern.RssReader.Services
         /// Асинхронно получает Rss.
         /// </summary>
         /// <returns>Task-коллекция Rss новостей.</returns>
-        Task<List<Models.RssFeed>> GetRssFeedsAsync();
+        Task<ConcurrentBag<Models.RssFeed>> GetRssFeedsAsync();
     }
 }

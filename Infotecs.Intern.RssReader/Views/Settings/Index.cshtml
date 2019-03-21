@@ -1,4 +1,5 @@
 ﻿@using System
+@using System.Globalization
 @model RssReaderOptions
 @{
     ViewData["Title"] = "Settings";
@@ -9,20 +10,28 @@
 
 @using (Html.BeginForm())
 {
-    <div>
-        @Html.TextBoxFor(b => b.UpdateInterval, new { @class = "form-control", placeholder = "Update Interval (In seconds)" })
+<div>
+    @Html.TextBoxFor(b => b.UpdateInterval, new { @class = "form-control", placeholder = "Update Interval (In seconds)" })
 
-        <br />
 
-        @Html.CheckBoxFor(b => b.EnableFormatting)
-        @Html.LabelFor(b => b.EnableFormatting)
-        @Html.ValidationMessageFor(b => b.EnableFormatting)
-        <br />
+    <br />
 
-        @*@Html.TextAreaFor(, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5 })*@
+    @Html.CheckBoxFor(b => b.EnableFormatting)
+    @Html.LabelFor(b => b.EnableFormatting)
+    @Html.ValidationMessageFor(b => b.EnableFormatting)
+    <br />
 
-        @*@Html.ListBox("Sources of RSS", new MultiSelectList(new {}))*@
-    </div>
+    @{
+
+
+    }
+    @*@Html.TextAreaFor(ViewBag.Feeds=>b, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5 })*@
+
+
+
+
+
+</div>
     <br />
     <button class="btn btn-success" type="submit">Save</button>
 }

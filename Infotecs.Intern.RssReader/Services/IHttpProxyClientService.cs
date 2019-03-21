@@ -14,12 +14,5 @@ namespace Infotecs.Intern.RssReader.Services
         /// </summary>
         /// <returns></returns>
         HttpClient CreateHttpClient();
-
-        /// <summary>
-        /// Создает http запрос.
-        /// </summary>
-        /// <param name="requestUri">Ссылка.</param>
-        /// <returns>Http запрос.</returns>
-        HttpWebRequest CreateHttpWebRequest(string requestUri);
     }
 }

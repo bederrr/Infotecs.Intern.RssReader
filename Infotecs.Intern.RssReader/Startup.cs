@@ -33,6 +33,7 @@ namespace Infotecs.Intern.RssReader
         {
             services.AddTransient<IRssService, RssService>();
             services.AddTransient<IHttpProxyClientService, HttpProxyClientService>();
+            services.AddSingleton<ISettingsService, SettingsService>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
