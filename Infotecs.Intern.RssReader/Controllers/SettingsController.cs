@@ -24,7 +24,7 @@ namespace Infotecs.Intern.RssReader.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //ViewBag.Feeds = options.Feeds;
+            ViewBag.Feeds = string.Join("\n", options.Feeds);
 
             //return View();
             return View(options);

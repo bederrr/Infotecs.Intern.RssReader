@@ -20,16 +20,13 @@
     @Html.LabelFor(b => b.EnableFormatting)
     @Html.ValidationMessageFor(b => b.EnableFormatting)
     <br />
-
+    
     @{
-
-
+        string line = ViewBag.Feeds;
     }
-    @*@Html.TextAreaFor(ViewBag.Feeds=>b, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5 })*@
 
-
-
-
+    @Html.TextAreaFor(b=>@line, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5 })
+    
 
 </div>
     <br />
