@@ -31,7 +31,7 @@ namespace Infotecs.Intern.RssReader.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.listItems = await rssService.GetRssFeedsAsync();
-            ViewBag.updateInterval = options.UpdateInterval;
+            ViewBag.updateInterval = options.UpdateInterval.TotalSeconds;
             ViewBag.enableFormatting = options.EnableFormatting;
 
             return View();

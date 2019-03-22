@@ -1,4 +1,5 @@
-﻿using Infotecs.Intern.RssReader.Models;
+﻿using System;
+using Infotecs.Intern.RssReader.Models;
 using Infotecs.Intern.RssReader.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,30 @@ namespace Infotecs.Intern.RssReader.Controllers
         public ActionResult Index(RssReaderOptions answeredOptions)
         {
             // do validation
-            if (!options.Equals(answeredOptions))
-            {
+            if (!options.Equals(answeredOptions) && ValidateOptions(answeredOptions))
+            {           
+                //парс строки
                 //save
                 settingsService.SaveSettings(answeredOptions);
             }
+            else
+            {
+                ModelState.AddModelError("", "Неверный параметр.");
+            }
             //return
             return Redirect("/");
+        }
+
+        private bool ValidateOptions(RssReaderOptions options)
+        {
+            foreach (var item in options.Feeds)
+            {
+                if (!Uri.TryCreate(item, UriKind.Absolute, out var a))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
