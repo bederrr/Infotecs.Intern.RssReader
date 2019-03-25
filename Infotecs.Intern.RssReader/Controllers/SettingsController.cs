@@ -21,30 +21,38 @@ namespace Infotecs.Intern.RssReader.Controllers
             this.settingsService = settingsService;
         }
 
+        /// <summary>
+        /// HttpGet для настроек.
+        /// </summary>
+        /// <returns>View.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             ViewBag.feeds = string.Join("\n", settingsService.GetSettings().Feeds);
 
-            //return View();
             return View(settingsService.GetSettings());
         }
 
+        /// <summary>
+        /// HttpPost для настроек.
+        /// </summary>
+        /// <param name="answeredOptions">Измененные настройки.</param>
+        /// <param name="feeds">Измененная строка ссылок.</param>
+        /// <returns>Redirect на главную.</returns>
         [HttpPost]
         public ActionResult Index(RssReaderOptions answeredOptions, string feeds)
         {
             answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
-            // do validation
+
             if (!settingsService.GetSettings().Equals(answeredOptions) && ValidateOptions(answeredOptions))
             {           
-                //save
                 settingsService.SaveSettings(answeredOptions);
             }
             else
             {
                 ModelState.AddModelError("", "Неверный параметр.");
             }
-            //return
+
             return Redirect("/");
         }
 

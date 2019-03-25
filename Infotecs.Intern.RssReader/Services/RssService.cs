@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using Infotecs.Intern.RssReader.Models;
-using Microsoft.Extensions.Options;
 
 namespace Infotecs.Intern.RssReader.Services
 {
     /// <inheritdoc />
     public class RssService : IRssService
     {
-        private RssReaderOptions options;
+        private readonly RssReaderOptions options;
         private readonly IHttpProxyClientService httpProxyClientService;
 
         /// <summary>
