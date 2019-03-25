@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using Infotecs.Intern.RssReader.Models;
 using Infotecs.Intern.RssReader.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace Infotecs.Intern.RssReader.Controllers
 {
@@ -28,8 +26,6 @@ namespace Infotecs.Intern.RssReader.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.feeds = string.Join("\n", settingsService.GetSettings().Feeds);
-
             return View(settingsService.GetSettings());
         }
 
@@ -42,11 +38,14 @@ namespace Infotecs.Intern.RssReader.Controllers
         [HttpPost]
         public ActionResult Index(RssReaderOptions answeredOptions, string feeds)
         {
-            answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
+            if (!settingsService.GetSettings().Equals(answeredOptions))
+            {
+                answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
 
-            if (!settingsService.GetSettings().Equals(answeredOptions) && ValidateOptions(answeredOptions))
-            {           
-                settingsService.SaveSettings(answeredOptions);
+                if (ValidateOptions(answeredOptions))
+                {
+                    settingsService.SaveSettings(answeredOptions);
+                }
             }
             else
             {

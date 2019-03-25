@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Infotecs.Intern.RssReader.Models;
 using Infotecs.Intern.RssReader.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace Infotecs.Intern.RssReader.Controllers
 {

@@ -8,22 +8,21 @@
 
 @using (Html.BeginForm())
 {
-    <div>
-        @Html.TextBoxFor(b => b.UpdateInterval, new { @class = "form-control", placeholder = "Update Interval" })
+<div>
+    @Html.TextBoxFor(b => b.UpdateInterval, new { @class = "form-control", placeholder = "Update Interval" })
 
+    <br />
+    @Html.CheckBoxFor(b => b.EnableFormatting)
+    @Html.LabelFor(b => b.EnableFormatting)
+    @Html.ValidationMessageFor(b => b.EnableFormatting)
+    <br />
 
-        <br/>
-        @Html.CheckBoxFor(b => b.EnableFormatting)
-        @Html.LabelFor(b => b.EnableFormatting)
-        @Html.ValidationMessageFor(b => b.EnableFormatting)
-        <br/>
+    @{
+        var feeds = string.Join("\n", Model.Feeds);
+    }
 
-        @{
-            string feeds = ViewBag.feeds;
-        }
-
-        @Html.TextAreaFor(b => feeds, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5 })
-    </div>
+    @Html.TextAreaFor(b => feeds, new { @class = "form-control", placeholder = "Sources of RSS", rows = 5})
+</div>
     <br/>
     <button class="btn btn-success" type="submit">Save</button>
 }
