@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Infotecs.Intern.RssReader.Models;
 using Infotecs.Intern.RssReader.Services;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,6 @@ namespace Infotecs.Intern.RssReader.Controllers
 {
     public class SettingsController : Controller
     {
-        private readonly RssReaderOptions options;
         private readonly ISettingsService settingsService;
 
         /// <summary>
@@ -19,25 +19,24 @@ namespace Infotecs.Intern.RssReader.Controllers
         public SettingsController(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-            options = this.settingsService.GetSettings();
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Feeds = string.Join("\n", options.Feeds);
+            ViewBag.feeds = string.Join("\n", settingsService.GetSettings().Feeds);
 
             //return View();
-            return View(options);
+            return View(settingsService.GetSettings());
         }
 
         [HttpPost]
-        public ActionResult Index(RssReaderOptions answeredOptions)
+        public ActionResult Index(RssReaderOptions answeredOptions, string feeds)
         {
+            answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
             // do validation
-            if (!options.Equals(answeredOptions) && ValidateOptions(answeredOptions))
+            if (!settingsService.GetSettings().Equals(answeredOptions) && ValidateOptions(answeredOptions))
             {           
-                //парс строки
                 //save
                 settingsService.SaveSettings(answeredOptions);
             }
@@ -51,6 +50,13 @@ namespace Infotecs.Intern.RssReader.Controllers
 
         private bool ValidateOptions(RssReaderOptions options)
         {
+            if (options.EnableFormatting.Equals(null) ||
+                options.UpdateInterval.Equals(null) ||
+                options.UseProxy.Equals(null))
+            {
+                return false;
+            }
+
             foreach (var item in options.Feeds)
             {
                 if (!Uri.TryCreate(item, UriKind.Absolute, out var a))

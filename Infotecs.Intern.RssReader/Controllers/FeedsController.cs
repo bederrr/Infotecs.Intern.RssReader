@@ -25,7 +25,7 @@ namespace Infotecs.Intern.RssReader.Controllers
         }
 
         /// <summary>
-        /// Индекс.
+        /// Индекс контроллер.
         /// </summary>
         /// <returns>View.</returns>
         public async Task<IActionResult> Index()

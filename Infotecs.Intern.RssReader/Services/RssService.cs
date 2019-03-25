@@ -12,7 +12,7 @@ namespace Infotecs.Intern.RssReader.Services
     /// <inheritdoc />
     public class RssService : IRssService
     {
-        private readonly RssReaderOptions options;
+        private RssReaderOptions options;
         private readonly IHttpProxyClientService httpProxyClientService;
 
         /// <summary>
