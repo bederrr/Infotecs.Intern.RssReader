@@ -27,9 +27,16 @@ namespace Infotecs.Intern.RssReader.Services
         public async Task<ConcurrentBag<RssFeed>> GetRssFeedsAsync()
         {
             var result = new ConcurrentBag<RssFeed>();
-            List<Task> downloads = options.Feeds.ConvertAll(x => GetDownloadTaskAsync(x, result));
-            await Task.WhenAll(downloads);
 
+            try
+            {
+                List<Task> downloads = options.Feeds.ConvertAll(x => GetDownloadTaskAsync(x, result));
+                await Task.WhenAll(downloads);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             return result;
         }
 
