@@ -9,7 +9,7 @@ namespace Infotecs.Intern.RssReader.Controllers
     /// <inheritdoc/>
     public class FeedsController : Controller
     {
-        private readonly RssReaderOptions options;
+        private readonly ISettingsService settingsService;
         private readonly IRssService rssService;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Infotecs.Intern.RssReader.Controllers
         public FeedsController(IRssService rssService, ISettingsService settingsService)
         {
             this.rssService = rssService;
-            options = settingsService.GetSettings();
+            this.settingsService = settingsService;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace Infotecs.Intern.RssReader.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.listItems = await rssService.GetRssFeedsAsync();
-            ViewBag.updateInterval = options.UpdateInterval.TotalSeconds;
-            ViewBag.enableFormatting = options.EnableFormatting;
+            ViewBag.updateInterval = settingsService.GetSettings().UpdateInterval.TotalSeconds;
+            ViewBag.enableFormatting = settingsService.GetSettings().EnableFormatting;
 
             return View();
         }

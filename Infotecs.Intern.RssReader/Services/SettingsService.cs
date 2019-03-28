@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 namespace Infotecs.Intern.RssReader.Services
 {
     /// <inheritdoc/>>
-    public class SettingsService : ISettingsService
+    public class SettingsService
     {
         private RssReaderOptions options;
 
@@ -25,6 +25,11 @@ namespace Infotecs.Intern.RssReader.Services
         public void SaveSettings(RssReaderOptions options)
         {
             this.options = options;
+        }
+
+        public int CompareTo(object obj)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

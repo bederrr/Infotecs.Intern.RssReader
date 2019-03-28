@@ -38,18 +38,18 @@ namespace Infotecs.Intern.RssReader.Controllers
         [HttpPost]
         public ActionResult Index(RssReaderOptions answeredOptions, string feeds)
         {
-            if (!settingsService.GetSettings().Equals(answeredOptions))
-            {
-                answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
+            answeredOptions.Feeds = new List<string>(feeds.Split("\n"));
 
+            if (settingsService.GetSettings() != answeredOptions)
+            {
                 if (ValidateOptions(answeredOptions))
                 {
                     settingsService.SaveSettings(answeredOptions);
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("", "Неверный параметр.");
+                else
+                {
+                    ModelState.AddModelError("", "Неверный параметр.");
+                }
             }
 
             return Redirect("/");
